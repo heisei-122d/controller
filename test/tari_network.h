@@ -3,8 +3,8 @@
 
 void connect_wifi()
 {
-	const char SSID[] = "122d-manabino";
-	const char PASSWORD[] = "kennkunn";
+	const char SSID[] = "UBIC-3D-G";
+	const char PASSWORD[] = "UbiC$mar29-";
 	WiFi.begin(SSID, PASSWORD);
 	Serial.print("無線LAN接続中");
 	while (WiFi.status() != WL_CONNECTED) {
@@ -17,8 +17,8 @@ void connect_wifi()
 bool post_to_slack(String msg)
 {
 	const String slack_hook_url = "https://hooks.slack.com/services/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";
-  	const String slack_username = "test_controller";
-	const String slack_icon = ":稲穂:";
+  	const String slack_username = "noctiluca";
+	const String slack_icon = ":ear_of_rice:";
 	const String slack_channel = "#random";
 	const char* host = "hooks.slack.com";
 	Serial.print("Connecting to ");
