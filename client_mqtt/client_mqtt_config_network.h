@@ -1,6 +1,8 @@
 #include <WiFi.h>
 #include <PubSubClient.h>
 
+#define LED_STATUS 23
+
 // WiFi
 const char ssid[] = "duck_wifi";
 const char passwd[] = "duckduck";
@@ -12,42 +14,44 @@ const int mqttPort = 1883;       // MQTTのポート
 WiFiClient wifiClient;
 PubSubClient mqttClient(wifiClient);
 
-void init_network(){
-    // Connect WiFi
-    connectWiFi();
-
-    // Connect MQTT
-    connectMqtt();
-}
 /**
- * Connect WiFi
- */
+   Connect WiFi
+*/
 void connectWiFi()
 {
-    WiFi.begin(ssid, passwd);
-    Serial.print("WiFi connecting...");
-    while(WiFi.status() != WL_CONNECTED) {
-        Serial.print(".");
-        delay(100);
-    }
-    Serial.print(" connected. ");
-    Serial.println(WiFi.localIP());
+  WiFi.begin(ssid, passwd);
+  Serial.print("WiFi connecting...");
+  while (WiFi.status() != WL_CONNECTED) {
+    Serial.print(".");
+    delay(100);
+  }
+  Serial.print(" connected. ");
+  Serial.println(WiFi.localIP());
 }
 /**
- * Connect MQTT
- */
+   Connect MQTT
+*/
 void connectMqtt()
 {
-    mqttClient.setServer(mqttHost, mqttPort);
-    mqttClient.setCallback(callback);
-    while( ! mqttClient.connected() ) {
-        Serial.println("Connecting to MQTT...");
-        String clientId = "ESP32-" + String(random(0xffff), HEX);
-        if ( mqttClient.connect(clientId.c_str()) ) {
-            Serial.println("connected"); 
-            mqttClient.subscribe(subtopic);
-        }
-        delay(1000);
-        randomSeed(micros());
+  mqttClient.setServer(mqttHost, mqttPort);
+  //mqttClient.setCallback(callback);
+  while ( ! mqttClient.connected() ) {
+    Serial.println("Connecting to MQTT...");
+    String clientId = "ESP32-" + String(random(0xffff), HEX);
+    if ( mqttClient.connect(clientId.c_str()) ) {
+      Serial.println("connected");
+      //mqttClient.subscribe(subtopic);
     }
+    delay(1000);
+    randomSeed(micros());
+  }
+  digitalWrite(LED_STATUS, HIGH);
+}
+
+void initNetwork() {
+  // Connect WiFi
+  connectWiFi();
+
+  // Connect MQTT
+  connectMqtt();
 }
